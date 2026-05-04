@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
+import { FaGoogle, FaGithub } from "react-icons/fa";
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -40,7 +42,7 @@ export default function SignupPage() {
     console.log("return data", data);
 
     alert("Signup successful");
-    window.location.href = "/signin";
+    window.location.href = "/login";
   };
 
   const handleOAuth = async (provider: "google" | "github") => {
@@ -107,21 +109,35 @@ export default function SignupPage() {
           {loading ? "Creating..." : "Sign Up"}
         </button>
 
+        <div className="flex justify-end">
+          <Link
+              href="/login"
+              className="text-blue-500 hover:underline text-sm"
+          >
+            Login Here
+          </Link>
+        </div>
+
+        <div className="flex justify-center"><p>or</p></div>
+
         {/* OAuth Buttons */}
         <div className="flex flex-col gap-2">
+
           <button
             type="button"
             onClick={() => handleOAuth("google")}
-            className="border p-2"
+            className=" flex justify-center items-center gap-2 border p-2"
           >
+            <FaGoogle />
             Continue with Google
           </button>
 
           <button
             type="button"
             onClick={() => handleOAuth("github")}
-            className="border p-2"
+            className=" flex justify-center items-center gap-2 border p-2"
           >
+            <FaGithub />
             Continue with GitHub
           </button>
         </div>

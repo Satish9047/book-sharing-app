@@ -1,22 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { redirect } from "next/navigation";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-
-  // useEffect(() => {
-  //   if (!token) {
-  //     setMessage("Invalid reset link");
-  //   }
-  // }, [token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,9 +39,8 @@ export default function ResetPasswordPage() {
     }
 
     setMessage("Password reset successful. You can now log in.");
-    // Optionally redirect to login after a delay
     setTimeout(() => {
-      window.location.href = "/login";
+      redirect("/login");
     }, 2000);
   };
 
@@ -103,5 +97,19 @@ export default function ResetPasswordPage() {
         {message && <p className="text-sm text-center">{message}</p>}
       </form>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <p>Loading...</p>
+        </div>
+      }
+    >
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

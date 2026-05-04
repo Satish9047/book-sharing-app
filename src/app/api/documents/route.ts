@@ -1,1 +1,1 @@
-export { POST, runtime } from "../upload/route";
+export { POST } from "../upload/route";

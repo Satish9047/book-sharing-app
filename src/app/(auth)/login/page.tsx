@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
+import {FaGithub, FaGoogle} from "react-icons/fa";
 
 export default function SigninPage() {
   const [form, setForm] = useState({
@@ -69,15 +71,6 @@ export default function SigninPage() {
           required
         />
 
-        <div className="text-right">
-          <a
-            href="/forgot-password"
-            className="text-blue-500 hover:underline text-sm"
-          >
-            Forgot Password?
-          </a>
-        </div>
-
         <button
           type="submit"
           disabled={loading}
@@ -86,20 +79,38 @@ export default function SigninPage() {
           {loading ? "Signing in..." : "Sign In"}
         </button>
 
+        <div className="flex justify-between">
+          <Link
+              href="/forgot-password"
+              className="text-blue-500 hover:underline text-sm"
+          >
+            Forgot Password?
+          </Link>
+          <Link
+              href="/register"
+              className="text-blue-500 hover:underline text-sm"
+          >
+            Register Here
+          </Link>
+        </div>
+        <div className="flex justify-center"><p>or</p></div>
+
         <div className="flex flex-col gap-2">
           <button
-            type="button"
-            onClick={() => handleOAuth("google")}
-            className="border p-2"
+              type="button"
+              onClick={() => handleOAuth("google")}
+              className=" flex justify-center items-center gap-2 border p-2"
           >
+            <FaGoogle />
             Continue with Google
           </button>
 
           <button
-            type="button"
-            onClick={() => handleOAuth("github")}
-            className="border p-2"
+              type="button"
+              onClick={() => handleOAuth("github")}
+              className=" flex justify-center items-center gap-2 border p-2"
           >
+            <FaGithub />
             Continue with GitHub
           </button>
         </div>
