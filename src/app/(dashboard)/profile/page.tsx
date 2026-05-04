@@ -96,9 +96,6 @@ const ProfilePage = () => {
           <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-zinc-900">Account Details</h4>
-              <button className="text-primary text-xs font-bold hover:underline">
-                Manage
-              </button>
             </div>
 
             <div className="space-y-4">

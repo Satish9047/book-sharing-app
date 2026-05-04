@@ -12,6 +12,7 @@ export interface DocumentCardProps {
   id: string;
   title: string;
   category: string;
+  description: string;
   coverImage: string;
   uploader: {
     name: string;

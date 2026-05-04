@@ -1,4 +1,11 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -54,4 +61,22 @@ export const verifications = pgTable("verifications", {
   expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const uploadedDocuments = pgTable("uploaded_documents", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  title: text("title").notNull(),
+  author: text("author").notNull(),
+  category: text("category").notNull(),
+  abstract: text("abstract").notNull(),
+  imagePublicId: text("image_public_id"),
+  pdfPublicId: text("pdf_public_id").notNull(),
+  pdfUrl: text("pdf_url").notNull(),
+  imageUrl: text("image_url"),
+  fileName: text("file_name").notNull(),
+  fileSize: integer("file_size").notNull(),
+  mimeType: text("mime_type").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
 });

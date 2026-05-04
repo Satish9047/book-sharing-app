@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { DocumentCardProps } from "@/interface/interface";
 import Image from "next/image";
@@ -27,7 +28,7 @@ export const DocumentCard = ({
       </div>
 
       <div className="flex flex-col gap-1.5 px-1">
-        <Link href={`/library/${id}`}>
+        <Link href={`/library/${id}`} className="flex flex-col gap-1.5">
           <span className="text-[10px] font-bold text-primary uppercase tracking-widest">
             {category}
           </span>
