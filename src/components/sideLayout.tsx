@@ -32,16 +32,19 @@ const SideLayout = ({
           <SidebarLink
             icon={<Home size={20} />}
             label="Home"
-            active={pathname === "/home" || pathname === "/"}
+            path="/"
+            active={pathname === "/" || pathname === "/"}
           />
           <SidebarLink
             icon={<Library size={20} />}
             label="Library"
+            path="library"
             active={pathname === "/library"}
           />
           <SidebarLink
             icon={<User size={20} />}
             label="Profile"
+            path="profile"
             active={pathname === "/profile"}
           />
           <div className="flex-1 px-4 space-y-2">
@@ -53,11 +56,13 @@ const SideLayout = ({
               <SidebarLink
                 icon={<LayoutDashboard size={20} />}
                 label="Admin-Dashboard"
+                path="/admin-dashboard"
                 active={pathname === "/admin-dashboard"}
               />
               <SidebarLink
                 icon={<Users size={20} />}
                 label="Users"
+                path="/users"
                 active={pathname === "/users"}
               />
             </div>

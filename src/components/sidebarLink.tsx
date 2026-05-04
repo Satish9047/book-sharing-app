@@ -2,11 +2,11 @@ import { SidebarLinkProps } from "@/interface/interface";
 import Link from "next/link";
 
 const SidebarLink = (props: SidebarLinkProps) => {
-  const { icon, label, active } = props;
+  const { icon, label, path, active } = props;
   return (
     <>
       <Link
-        href={`/${label.toLowerCase()}`}
+        href={path}
         className={`
         flex items-center gap-3.5 px-4 py-3 rounded-xl font-semibold transition-all duration-200 group
         ${

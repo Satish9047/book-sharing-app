@@ -2,6 +2,7 @@ export interface SidebarLinkProps {
   icon: React.ReactNode;
   label: string;
   active?: boolean;
+  path: string;
 }
 
 export interface SidebarDropdownProps extends SidebarLinkProps {
