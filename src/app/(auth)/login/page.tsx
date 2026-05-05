@@ -1,47 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
+import { redirect, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import {FaGithub, FaGoogle} from "react-icons/fa";
+import { FaGithub, FaGoogle } from "react-icons/fa";
+import { toast } from "sonner";
+import { useTransition } from "react";
 
-export default function SigninPage() {
+function SigninForm() {
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from") || "/profile";
+  const [isPending, startTransition] = useTransition();
+  const [activeAction, setActiveAction] = useState<string | null>(null);
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  const [loading, setLoading] = useState(false);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    const { data, error } = await authClient.signIn.email({
-      email: form.email,
-      password: form.password,
+    setActiveAction("email");
+    startTransition(async () => {
+      const { data, error } = await authClient.signIn.email({
+        email: form.email,
+        password: form.password,
+      });
+      if (error) {
+        toast.error(`Login failed!: ${error.message || "Unknown Error"}`, {
+          duration: 5000,
+        });
+        return;
+      }
+      toast.success("Login successful!", { duration: 5000 });
+      redirect("/profile");
     });
-
-    setLoading(false);
-    console.log("return data", data);
-
-    if (error) {
-      alert(error.message || "Login failed");
-      return;
-    }
-
-    alert("Login successful");
-    window.location.href = "/profile"; // change if needed
   };
 
-  const handleOAuth = async (provider: "google" | "github") => {
-    await authClient.signIn.social({
-      provider,
-      callbackURL: "/profile",
+  const handleOAuth = (provider: "google" | "github") => {
+    setActiveAction(provider);
+    startTransition(async () => {
+      await authClient.signIn.social({
+        provider,
+        callbackURL: from,
+      });
     });
   };
 
@@ -73,48 +79,68 @@ export default function SigninPage() {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={isPending}
           className="w-full bg-black text-white p-2"
         >
-          {loading ? "Signing in..." : "Sign In"}
+          {isPending && activeAction === "email" ? "Signing in..." : "Sign In"}
         </button>
 
         <div className="flex justify-between">
           <Link
-              href="/forgot-password"
-              className="text-blue-500 hover:underline text-sm"
+            href="/forgot-password"
+            className="text-blue-500 hover:underline text-sm"
           >
             Forgot Password?
           </Link>
           <Link
-              href="/register"
-              className="text-blue-500 hover:underline text-sm"
+            href="/register"
+            className="text-blue-500 hover:underline text-sm"
           >
             Register Here
           </Link>
         </div>
-        <div className="flex justify-center"><p>or</p></div>
+        <div className="flex justify-center">
+          <p>or</p>
+        </div>
 
         <div className="flex flex-col gap-2">
           <button
-              type="button"
-              onClick={() => handleOAuth("google")}
-              className=" flex justify-center items-center gap-2 border p-2"
+            type="button"
+            onClick={() => handleOAuth("google")}
+            className="flex justify-center items-center gap-2 border p-2"
           >
             <FaGoogle />
-            Continue with Google
+            {isPending && activeAction === "google"
+              ? "Connecting Google..."
+              : "Continue with Google"}
           </button>
 
           <button
-              type="button"
-              onClick={() => handleOAuth("github")}
-              className=" flex justify-center items-center gap-2 border p-2"
+            type="button"
+            onClick={() => handleOAuth("github")}
+            className="flex justify-center items-center gap-2 border p-2"
           >
             <FaGithub />
-            Continue with GitHub
+            {isPending && activeAction === "github"
+              ? "Connecting GitHub..."
+              : "Continue with GitHub"}
           </button>
         </div>
       </form>
     </div>
+  );
+}
+
+export default function SigninPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <p>Loading...</p>
+        </div>
+      }
+    >
+      <SigninForm />
+    </Suspense>
   );
 }

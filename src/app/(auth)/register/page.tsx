@@ -4,6 +4,8 @@ import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { FaGoogle, FaGithub } from "react-icons/fa";
+import { redirect } from "next/navigation";
+import { toast } from "sonner";
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -28,7 +30,6 @@ export default function SignupPage() {
       email: form.email,
       password: form.password,
       name: form.name,
-      // custom fields
       username: form.username,
       contact: form.contact,
     });
@@ -36,13 +37,14 @@ export default function SignupPage() {
     setLoading(false);
 
     if (error) {
-      alert(error.message || "Signup failed");
+      toast.error(`Register failed: ${error.message || "Unknown error"}`, {
+        duration: 5000,
+      });
       return;
     }
     console.log("return data", data);
-
-    alert("Signup successful");
-    window.location.href = "/login";
+    toast.success("Register successful!", { duration: 5000 });
+    redirect("/login");
   };
 
   const handleOAuth = async (provider: "google" | "github") => {
@@ -110,19 +112,17 @@ export default function SignupPage() {
         </button>
 
         <div className="flex justify-end">
-          <Link
-              href="/login"
-              className="text-blue-500 hover:underline text-sm"
-          >
+          <Link href="/login" className="text-blue-500 hover:underline text-sm">
             Login Here
           </Link>
         </div>
 
-        <div className="flex justify-center"><p>or</p></div>
+        <div className="flex justify-center">
+          <p>or</p>
+        </div>
 
         {/* OAuth Buttons */}
         <div className="flex flex-col gap-2">
-
           <button
             type="button"
             onClick={() => handleOAuth("google")}

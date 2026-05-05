@@ -1,23 +1,8 @@
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+// Auth is already enforced by middleware.ts for all /admin-dashboard and /users routes.
+// No need to re-fetch the session here — that would add an extra DB round-trip.
 
-async function Layout({children}: Readonly<{children: React.ReactNode}>) {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
-    console.log(session);
-
-    if (!session?.user) {
-        redirect("/login");
-    }
-
-    if (session.user.role !== "admin") {
-        redirect("/"); // or 403 page
-    }
-
-    return (
-        <div>{children}</div>
-    )
+async function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <div>{children}</div>;
 }
+
 export default Layout;
