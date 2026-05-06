@@ -22,6 +22,13 @@
       "when": 1777877743359,
       "tag": "0002_bent_turbo",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1778083167152,
+      "tag": "0003_flippant_junta",
+      "breakpoints": true
     }
   ]
 }

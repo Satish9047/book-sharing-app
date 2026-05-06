@@ -4,8 +4,10 @@ import type { UploadApiResponse } from "cloudinary";
 import { db } from "@/database/db";
 import { uploadedDocuments } from "@/database/schema";
 import { cloudinary } from "@/lib/cloudinary";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
-export const runtime = "nodejs";
+// export const runtime = "nodejs";
 
 const MAX_PDF_SIZE = 50 * 1024 * 1024;
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
@@ -15,6 +17,7 @@ const metadataSchema = z.object({
   author: z.string().trim().min(1, "Author is required").max(120),
   category: z.string().trim().min(1, "Category is required").max(100),
   abstract: z.string().trim().min(1, "Abstract is required").max(5000),
+  uploadedByUserId: z.string().trim(),
 });
 
 type CloudinaryResourceType = "image" | "raw";
@@ -69,7 +72,9 @@ async function deleteCloudinaryAsset(
   if (!publicId) return;
 
   try {
-    await cloudinary.uploader.destroy(publicId, { resource_type: resourceType });
+    await cloudinary.uploader.destroy(publicId, {
+      resource_type: resourceType,
+    });
   } catch (error) {
     console.error("[UPLOAD_CLOUDINARY_CLEANUP]", error);
   }
@@ -78,6 +83,16 @@ async function deleteCloudinaryAsset(
 export async function POST(req: NextRequest) {
   let pdfUpload: UploadApiResponse | null = null;
   let imageUpload: UploadApiResponse | null = null;
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) {
+    return new NextResponse(JSON.stringify({ message: "Unauthorized" }), {
+      status: 401,
+    });
+  }
+
+  const userId = session.user?.id;
 
   try {
     const formData = await req.formData();
@@ -86,6 +101,7 @@ export async function POST(req: NextRequest) {
       author: getString(formData, "author"),
       category: getString(formData, "category"),
       abstract: getString(formData, "abstract"),
+      uploadedByUserId: userId,
     });
 
     if (!metadata.success) {
@@ -155,6 +171,7 @@ export async function POST(req: NextRequest) {
       .values({
         title: metadata.data.title,
         author: metadata.data.author,
+        uploadedByUserId: metadata.data.uploadedByUserId,
         category: metadata.data.category,
         abstract: metadata.data.abstract,
         imagePublicId: imageUpload?.public_id ?? null,

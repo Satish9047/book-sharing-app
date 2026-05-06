@@ -67,6 +67,9 @@ export const uploadedDocuments = pgTable("uploaded_documents", {
   id: uuid("id").defaultRandom().primaryKey(),
   title: text("title").notNull(),
   author: text("author").notNull(),
+  uploadedByUserId: text("uploaded_by_user_id")
+    .notNull()
+    .references(() => users.id),
   category: text("category").notNull(),
   abstract: text("abstract").notNull(),
   imagePublicId: text("image_public_id"),

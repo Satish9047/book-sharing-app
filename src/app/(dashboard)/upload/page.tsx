@@ -11,6 +11,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Image from "next/image";
+// import { getSession } from "@/lib/auth";
 
 const UploadPage = () => {
   const inputPdfRef = useRef<HTMLInputElement>(null);
@@ -115,6 +116,7 @@ const UploadPage = () => {
       if (author) formData.append("author", author);
       if (category) formData.append("category", category);
       if (abstract) formData.append("abstract", abstract);
+      // formData.append("uploadedBy", session.user.name);
 
       const res = await fetch("/api/upload", {
         method: "POST",

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { FaGoogle, FaGithub } from "react-icons/fa";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function SignupPage() {
@@ -17,6 +17,7 @@ export default function SignupPage() {
   });
 
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -44,7 +45,7 @@ export default function SignupPage() {
     }
     console.log("return data", data);
     toast.success("Register successful!", { duration: 5000 });
-    redirect("/login");
+    router.push("/login");
   };
 
   const handleOAuth = async (provider: "google" | "github") => {

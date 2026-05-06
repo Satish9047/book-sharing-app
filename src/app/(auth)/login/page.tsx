@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { redirect, useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { FaGithub, FaGoogle } from "react-icons/fa";
@@ -10,6 +10,7 @@ import { useTransition } from "react";
 
 function SigninForm() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const from = searchParams.get("from") || "/profile";
   const [isPending, startTransition] = useTransition();
   const [activeAction, setActiveAction] = useState<string | null>(null);
@@ -37,7 +38,7 @@ function SigninForm() {
         return;
       }
       toast.success("Login successful!", { duration: 5000 });
-      redirect("/profile");
+      router.push("/profile");
     });
   };
 
