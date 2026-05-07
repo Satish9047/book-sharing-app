@@ -10,15 +10,31 @@ export interface SidebarDropdownProps extends SidebarLinkProps {
 }
 
 export interface DocumentCardProps {
-  id: string;
-  title: string;
+  abstract?: string;
+  author: string;
   category: string;
-  description: string;
-  coverImage: string;
-  uploader: {
-    name: string;
-    initials: string;
-  };
+  createdAt?: Date;
+  fileName?: string;
+  fileSize?: number;
+  id: string;
+  imagePublicId?: string;
+  imageUrl: string | null;
+  mimeType?: string;
+  pdfPublicId?: string;
+  pdfUrl?: string;
+  title: string;
+  uploadedByUserId?: string;
+  uploaderName?: string;
+  uploaderAvatar?: string | null;
+  // id: string;
+  // title: string;
+  // category: string;
+  // description: string;
+  // coverImage: string;
+  // uploader: {
+  //   name: string;
+  //   initials: string;
+  // };
 }
 
 export interface UserProfile {
@@ -35,3 +51,29 @@ export interface UserStats {
   followers?: string;
   collections?: string;
 }
+
+// type Session = {
+//     user: StripEmptyObjects<{
+//         id: string;
+//         createdAt: Date;
+//         updatedAt: Date;
+//         email: string;
+//         emailVerified: boolean;
+//         name: string;
+//         image?: string | null | undefined;
+//     } & {} & {
+//         username?: string | null | undefined;
+//         contact?: string | null | undefined;
+//         role?: string | null | undefined;
+//     }>;
+//     session: StripEmptyObjects<{
+//         id: string;
+//         createdAt: Date;
+//         updatedAt: Date;
+//         userId: string;
+//         expiresAt: Date;
+//         token: string;
+//         ipAddress?: string | null | undefined;
+//         userAgent?: string | null | undefined;
+//     } & {} & {}>;
+// } | null

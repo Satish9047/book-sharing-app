@@ -30,6 +30,8 @@ const SideLayout = ({
   const isUser = !!userSession?.user.name;
   const [isPending, startTransition] = useTransition();
 
+  console.log("user session data", userSession);
+
   const handleLogout = () => {
     startTransition(async () => {
       await authClient.signOut();

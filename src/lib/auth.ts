@@ -9,6 +9,18 @@ const resend = new Resend(process.env.RESEND_API_KEY as string);
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET as string,
   baseUrl: process.env.BETTER_AUTH_URL as string,
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          console.log("User data being sent to Database:", user);
+          return {
+            data: user,
+          };
+        },
+      },
+    },
+  },
   database: drizzleAdapter(db, {
     provider: "pg",
     schema,
@@ -27,7 +39,7 @@ export const auth = betterAuth({
       });
     },
 
-    onPasswordReset: async ({ user }, request) => {
+    onPasswordReset: async ({ user }) => {
       // your logic here
       console.log(`Password for user ${user.email} has been reset.`);
     },
@@ -41,6 +53,18 @@ export const auth = betterAuth({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       pkce: false,
+      mapProfile: async (profile) => {
+        // This will log the raw JSON object from Google to your server console
+        console.log("Raw Google Profile Data:", profile);
+
+        // You must return the object with these standard fields
+        return {
+          id: profile.id || profile?.sub,
+          email: profile.email,
+          name: profile.name,
+          image: profile.picture,
+        };
+      },
     },
   },
   user: {
@@ -53,11 +77,11 @@ export const auth = betterAuth({
         type: "string",
         required: false,
       },
-      role:{
+      role: {
         type: "string",
         required: false,
         default: "user",
-      }
+      },
     },
   },
 });

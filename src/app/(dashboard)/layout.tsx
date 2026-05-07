@@ -1,19 +1,7 @@
-// import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "@/app/globals.css";
 import SideLayout from "@/components/sideLayout";
 import TopBar from "@/components/topbar";
 import { getSession } from "@/lib/session";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
@@ -27,15 +15,8 @@ export default async function RootLayout({
 }>) {
   const session = await getSession();
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        <SideLayout userSession={session}>
-          <TopBar isLoggedIn={!!session}>{children}</TopBar>
-        </SideLayout>
-      </body>
-    </html>
+    <SideLayout userSession={session}>
+      <TopBar isLoggedIn={!!session}>{children}</TopBar>
+    </SideLayout>
   );
 }
