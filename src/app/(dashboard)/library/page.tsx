@@ -22,7 +22,14 @@ const LibraryPage = async () => {
     .innerJoin(users, eq(uploadedDocuments.uploadedByUserId, users.id))
     .orderBy(desc(uploadedDocuments.createdAt));
 
-  console.log(docs);
+  docs.forEach((doc) => {
+    if (doc.uploaderAvatar == null) {
+      return (doc.uploaderAvatar =
+        "https://cdn-icons-png.flaticon.com/512/3135/3135715.png");
+    }
+  });
+
+  console.log("library", docs);
 
   return (
     <div className="p-10 max-w-8xl mx-auto pb-24">
@@ -36,9 +43,6 @@ const LibraryPage = async () => {
               Find the pdf you are looking for
             </p>
           </div>
-          <button className="flex items-center gap-1 text-sm font-bold text-primary hover:gap-2 transition-all">
-            View all library
-          </button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">

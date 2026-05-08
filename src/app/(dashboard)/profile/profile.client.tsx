@@ -3,7 +3,7 @@
 import { DocumentCard } from "@/components/documentCard";
 import Input from "@/components/input";
 import Stat from "@/components/statsCard";
-import RECENT_DOCS from "@/database/testdata";
+// import RECENT_DOCS from "@/database/testdata";
 import { CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 
@@ -35,9 +35,18 @@ type Session = {
 
 interface Props {
   session: Session;
+  documents: {
+    id: string;
+    title: string;
+    author: string;
+    imageUrl: string;
+    category: string;
+    uploaderName: string;
+    uploaderAvatar: string;
+  }[];
 }
 
-const ProfileClient = ({ session }: Props) => {
+const ProfileClient = ({ session, documents }: Props) => {
   const user = {
     name: session?.user?.name || "Unknown User",
     email: session?.user?.email || "No Email",
@@ -45,7 +54,7 @@ const ProfileClient = ({ session }: Props) => {
     contact: session?.user?.contact || "Not Added",
     avatar:
       session?.user?.image ||
-      "https://ui-avatars.com/api/?name=User&format=png",
+      "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
 
     stats: {
       downloads: "4.2k",
@@ -98,8 +107,8 @@ const ProfileClient = ({ session }: Props) => {
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-            {RECENT_DOCS.map((doc, index) => (
-              <DocumentCard key={index} {...doc} />
+            {documents.map((doc) => (
+              <DocumentCard key={doc.id} {...doc} />
             ))}
           </div>
         </div>
